@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>café dj ☕</title>
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <a href="/" class="logo">☕ café dj</a>
+  <nav>
+    <a href="/feed">feed</a>
+    <span id="user-area"></span>
+  </nav>
+</header>
+
+<main>
+  <section id="signed-out" class="hidden card">
+    <h1>what are you drinking?</h1>
+    <p class="muted">snap your coffee or describe it. get a playlist for the vibe.</p>
+    <a href="/auth/login" class="btn primary">sign in with spotify</a>
+  </section>
+
+  <section id="signed-in" class="hidden">
+    <div class="card">
+      <h1>what are you drinking?</h1>
+
+      <div class="photo-zone">
+        <label class="btn ghost" for="coffee-photo">
+          📷 take a photo
+        </label>
+        <input id="coffee-photo" type="file" accept="image/*" hidden />
+        <div id="photo-preview" class="hidden">
+          <img id="photo-preview-img" alt="coffee preview" />
+          <button type="button" id="photo-clear" class="link">remove</button>
+        </div>
+      </div>
+
+      <div class="divider"><span>or</span></div>
+
+      <textarea
+        id="coffee-text"
+        rows="3"
+        placeholder="describe the coffee… roaster, origin, tasting notes, vibe…"
+      ></textarea>
+
+      <button id="generate" class="btn primary">generate playlist</button>
+    </div>
+
+    <div id="loading" class="hidden card center">
+      <div class="spinner"></div>
+      <p id="loading-msg">brewing your playlist…</p>
+      <p class="muted small">grinding beans · consulting the music gods · ~30s</p>
+    </div>
+
+    <div id="result" class="hidden card">
+      <p class="coffee">☕ <span id="r-coffee"></span></p>
+      <p class="vibe">🎵 <span id="r-vibe"></span></p>
+      <h2 id="r-name"></h2>
+      <p id="r-desc" class="muted"></p>
+      <div id="r-embed" class="embed-wrap"></div>
+      <button id="regenerate" class="btn ghost">make another</button>
+    </div>
+
+    <div id="error" class="hidden card error">
+      <p id="error-msg"></p>
+      <button id="error-dismiss" class="link">try again</button>
+    </div>
+  </section>
+</main>
+
+<script src="/app.js"></script>
+<footer>
+  <a href="https://github.com/aaronlindsey/cafe-dj" target="_blank" rel="noopener noreferrer">github</a>
+</footer>
+</body>
+</html>
