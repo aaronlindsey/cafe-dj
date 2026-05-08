@@ -126,19 +126,6 @@ export interface ContextBlockInput {
 }
 
 export function buildContextBlock(input: ContextBlockInput): string {
-  const now = new Date();
-  const day = now.toLocaleDateString('en-US', { weekday: 'long' });
-  const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  const month = now.getMonth();
-  const season =
-    month <= 1 || month === 11
-      ? 'winter'
-      : month <= 4
-      ? 'spring'
-      : month <= 7
-      ? 'summer'
-      : 'fall';
-
   const tracksLine = input.topTracks
     .slice(0, 6)
     .map((t) => `${t.title} — ${t.artist}`)
@@ -148,10 +135,6 @@ export function buildContextBlock(input: ContextBlockInput): string {
 - Top genres (most → least): ${input.topGenres.join(', ') || '(unknown)'}
 - Top artists: ${input.topArtists.join(', ') || '(unknown)'}
 - Recent listening leans toward: ${tracksLine || '(unknown)'}
-
-CONTEXT:
-- Local time: ${day} ${time}
-- Season: ${season}
 
 RECENTLY-SUGGESTED ARTISTS TO AVOID (the listener has had these in playlists already; pick fresh ones):
 ${input.recentExclusions.length ? input.recentExclusions.join(', ') : '(none yet)'}`;
