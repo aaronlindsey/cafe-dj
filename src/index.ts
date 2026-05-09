@@ -12,16 +12,10 @@ import {
   createPlaylist,
   getMe,
   getTopArtists,
-  getTopTracks,
   searchArtistTopTracks,
   searchTrack,
 } from './spotify';
-import {
-  aggregateGenres,
-  buildContextBlock,
-  callGemini,
-  SYSTEM_PROMPT,
-} from './gemini';
+import { buildContextBlock, callGemini, SYSTEM_PROMPT } from './gemini';
 import { curate, uniqueArtistNames } from './curate';
 import { getFeed, insertEntry, recentArtistsForUser } from './db';
 import type { Env, Variables } from './types';
@@ -89,13 +83,11 @@ app.post('/api/generate', requireSession, async (c) => {
   try {
     const token = await getValidToken(c.env, spotifyId);
 
-    const [topArtists, topTracks, recentExclusions] = await Promise.all([
+    const [topArtists, recentExclusions] = await Promise.all([
       getTopArtists(token),
-      getTopTracks(token),
       recentArtistsForUser(c.env.DB, spotifyId, 3),
     ]);
 
-    const topGenres = aggregateGenres(topArtists);
     const userParts =
       body.inputType === 'photo'
         ? [
@@ -107,12 +99,7 @@ app.post('/api/generate', requireSession, async (c) => {
             },
             {
               text: buildContextBlock({
-                topGenres,
                 topArtists: topArtists.map((a) => a.name),
-                topTracks: topTracks.map((t) => ({
-                  title: t.name,
-                  artist: t.artists[0]?.name ?? '',
-                })),
                 recentExclusions,
               }),
             },
@@ -121,12 +108,7 @@ app.post('/api/generate', requireSession, async (c) => {
             { text: `Free-form description of the coffee: ${body.text}` },
             {
               text: buildContextBlock({
-                topGenres,
                 topArtists: topArtists.map((a) => a.name),
-                topTracks: topTracks.map((t) => ({
-                  title: t.name,
-                  artist: t.artists[0]?.name ?? '',
-                })),
                 recentExclusions,
               }),
             },

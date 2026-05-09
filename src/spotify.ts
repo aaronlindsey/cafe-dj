@@ -45,7 +45,6 @@ export async function spotifyPost<T>(
 export interface SpotifyArtist {
   id: string;
   name: string;
-  genres?: string[];
 }
 
 export interface SpotifyTrack {
@@ -57,21 +56,10 @@ export interface SpotifyTrack {
 export interface TopArtistsResp {
   items: SpotifyArtist[];
 }
-export interface TopTracksResp {
-  items: SpotifyTrack[];
-}
 
 export async function getTopArtists(token: string): Promise<SpotifyArtist[]> {
   const data = await spotifyGet<TopArtistsResp>(
     '/me/top/artists?time_range=short_term&limit=20',
-    token
-  );
-  return data.items;
-}
-
-export async function getTopTracks(token: string): Promise<SpotifyTrack[]> {
-  const data = await spotifyGet<TopTracksResp>(
-    '/me/top/tracks?time_range=short_term&limit=10',
     token
   );
   return data.items;
