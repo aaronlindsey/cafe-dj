@@ -11,7 +11,6 @@ import {
   addTracksToPlaylist,
   createPlaylist,
   getMe,
-  getTopArtists,
   searchArtistTopTracks,
   searchTrack,
 } from './spotify';
@@ -83,10 +82,7 @@ app.post('/api/generate', requireSession, async (c) => {
   try {
     const token = await getValidToken(c.env, spotifyId);
 
-    const [topArtists, recentExclusions] = await Promise.all([
-      getTopArtists(token),
-      recentArtistsForUser(c.env.DB, spotifyId, 3),
-    ]);
+    const recentExclusions = await recentArtistsForUser(c.env.DB, spotifyId, 3);
 
     const userParts =
       body.inputType === 'photo'
@@ -98,19 +94,13 @@ app.post('/api/generate', requireSession, async (c) => {
               },
             },
             {
-              text: buildContextBlock({
-                topArtists: topArtists.map((a) => a.name),
-                recentExclusions,
-              }),
+              text: buildContextBlock({ recentExclusions }),
             },
           ]
         : [
             { text: `Free-form description of the coffee: ${body.text}` },
             {
-              text: buildContextBlock({
-                topArtists: topArtists.map((a) => a.name),
-                recentExclusions,
-              }),
+              text: buildContextBlock({ recentExclusions }),
             },
           ];
 

@@ -20,12 +20,10 @@ Gemini 3 Flash is the brain; Spotify Web API is the hands.
 ```
 [User] ──photo or text──► [Worker /api/generate]
                                    │
-                                   ├─► /me/top/artists  ┐
-                                   ├─► /me/top/tracks   ├─ Spotify (parallel)
                                    ├─► recent artists from D1 (exclusion list)
-                                   │
-                                   ├─► Gemini 3 Flash (multimodal, JSON schema)
-                                   │   returns: {coffeeSummary, vibeSummary,
+                                    │
+                                    ├─► Gemini 3 Flash (multimodal, JSON schema)
+                                    │   returns: {coffeeSummary, vibeSummary,
                                    │             playlistName, description,
                                    │             10-12 tracks, 6-10 artists}
                                    │
