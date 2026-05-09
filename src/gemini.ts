@@ -26,7 +26,7 @@ How to use the listener's taste:
 - It's perfectly OK to not add any personalized tracks if they don't match the
   vibe.
 - If added, personalized tracks should be mixed throughout the playlist.
-- You will be given the listeners top genres and top artists.
+- You will be given the listeners top artists.
 - Avoid recently-suggested artists (you'll be told which).
 
 How to NAME the playlist:
@@ -119,39 +119,14 @@ export async function callGemini(
 }
 
 export interface ContextBlockInput {
-  topGenres: string[];
   topArtists: string[];
-  topTracks: { title: string; artist: string }[];
   recentExclusions: string[];
 }
 
 export function buildContextBlock(input: ContextBlockInput): string {
-  const tracksLine = input.topTracks
-    .slice(0, 6)
-    .map((t) => `${t.title} — ${t.artist}`)
-    .join('; ');
-
   return `LISTENER PROFILE:
-- Top genres (most → least): ${input.topGenres.join(', ') || '(unknown)'}
 - Top artists: ${input.topArtists.join(', ') || '(unknown)'}
-- Recent listening leans toward: ${tracksLine || '(unknown)'}
 
 RECENTLY-SUGGESTED ARTISTS TO AVOID (the listener has had these in playlists already; pick fresh ones):
 ${input.recentExclusions.length ? input.recentExclusions.join(', ') : '(none yet)'}`;
-}
-
-export function aggregateGenres(
-  artists: { genres?: string[] }[],
-  limit = 10
-): string[] {
-  const counts = new Map<string, number>();
-  for (const a of artists) {
-    for (const g of a.genres ?? []) {
-      counts.set(g, (counts.get(g) ?? 0) + 1);
-    }
-  }
-  return [...counts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, limit)
-    .map(([g]) => g);
 }
