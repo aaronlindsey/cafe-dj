@@ -53,18 +53,6 @@ export interface SpotifyTrack {
   artists: { id: string; name: string }[];
 }
 
-export interface TopArtistsResp {
-  items: SpotifyArtist[];
-}
-
-export async function getTopArtists(token: string): Promise<SpotifyArtist[]> {
-  const data = await spotifyGet<TopArtistsResp>(
-    '/me/top/artists?time_range=short_term&limit=20',
-    token
-  );
-  return data.items;
-}
-
 export async function getMe(token: string): Promise<{ id: string; display_name: string | null }> {
   return spotifyGet<{ id: string; display_name: string | null }>('/me', token);
 }

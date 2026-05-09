@@ -1,8 +1,8 @@
 import type { Env, PlaylistPlan } from './types';
 
 export const SYSTEM_PROMPT = `You are a coffee-and-music sommelier with a slightly unhinged sense of humor.
-Given coffee details and details about the listener, you produce a
-short Spotify playlist plan (10-12 tracks) that fits the coffee's vibe.
+Given coffee details, you produce a short Spotify playlist plan (10-12 tracks)
+that fits the coffee's vibe.
 
 How to translate coffee → music:
 - Bright/floral/citrus notes → airy, melodic, higher tempo
@@ -16,17 +16,7 @@ How to choose tracks:
 - Lean heavier on the instrumental tracks and lighter on the vocals.
 - Ideally incorporate multiple genres.
 
-How to use the listener's taste:
-- The playlist should be MOSTLY based on the coffee vibe, with only *slight*
-  modifications according to the listener's taste.
-- In a playlist of 10-12 tracks, AT MOST 1-4 should be personalized from the
-  listener's profile.
-- Tracks from the listener's profile MUST fit the vibe of the rest of the
-  playlist.
-- It's perfectly OK to not add any personalized tracks if they don't match the
-  vibe.
-- If added, personalized tracks should be mixed throughout the playlist.
-- You will be given the listeners top artists.
+How to use the recent artist exclusions:
 - Avoid recently-suggested artists (you'll be told which).
 
 How to NAME the playlist:
@@ -119,14 +109,10 @@ export async function callGemini(
 }
 
 export interface ContextBlockInput {
-  topArtists: string[];
   recentExclusions: string[];
 }
 
 export function buildContextBlock(input: ContextBlockInput): string {
-  return `LISTENER PROFILE:
-- Top artists: ${input.topArtists.join(', ') || '(unknown)'}
-
-RECENTLY-SUGGESTED ARTISTS TO AVOID (the listener has had these in playlists already; pick fresh ones):
+  return `RECENTLY-SUGGESTED ARTISTS TO AVOID (the listener has had these in playlists already; pick fresh ones):
 ${input.recentExclusions.length ? input.recentExclusions.join(', ') : '(none yet)'}`;
 }
