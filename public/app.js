@@ -37,10 +37,12 @@ function bindHandlers() {
   $('generate').addEventListener('click', onGenerate);
   $('regenerate').addEventListener('click', () => {
     $('result').classList.add('hidden');
+    showGeneratorForm();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
   $('error-dismiss').addEventListener('click', () => {
     $('error').classList.add('hidden');
+    showGeneratorForm();
   });
 }
 
@@ -75,8 +77,10 @@ async function onGenerate() {
 
   $('error').classList.add('hidden');
   $('result').classList.add('hidden');
+  hideGeneratorForm();
   $('loading').classList.remove('hidden');
   $('generate').disabled = true;
+  $('loading').scrollIntoView({ behavior: 'smooth', block: 'start' });
   cycleLoadingMessages();
 
   try {
@@ -124,8 +128,17 @@ function renderResult(r) {
 }
 
 function showError(msg) {
+  showGeneratorForm();
   $('error-msg').textContent = msg;
   $('error').classList.remove('hidden');
+}
+
+function hideGeneratorForm() {
+  $('generator-form').classList.add('hidden');
+}
+
+function showGeneratorForm() {
+  $('generator-form').classList.remove('hidden');
 }
 
 function escapeHtml(s) {
